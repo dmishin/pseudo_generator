@@ -23,6 +23,7 @@ struct pseudo_generator
 
     pseudo_generator(): _continue_(0){};
     bool stopped()const { return _continue_ == 1/*_end_state_*/; };
+    
     //generator is true, when not stopped
     operator bool() const { return !stopped(); };
 
@@ -34,7 +35,7 @@ struct pseudo_generator
 template< class T, class TC >
 TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
     TC & generator = static_cast<TC &>(g);
-    v = generator(); // operator() is defined for the descender, not for base
+    generator( v ); // operator() is defined for the descender, not for base
     return generator; // return the same generator to be able to chain calls
 };
 
@@ -65,10 +66,11 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 
 /*Returns value and stores current state. "state" must be one of the states, declared in the header.
  */
-#define YIELD(value, state)                     \
-    _continue_ = state;				\
-    return (value);				\
-_label_##state:;
+#define YIELD(variable, value, state)		\
+    {_continue_ = state;			\
+    (variable) = (value);                       \
+    return;				        \
+    _label_##state:;}
 
 /*Declare beginning of the generator body. MUST follow the END_RESTORE_STATE.
  */
@@ -130,7 +132,6 @@ private:
 	if ( !have_value ) throw std::logic_error( "attempt to increase end() iterator" );
 	get_value();
     };
-
 
     template< class T >
     friend bool operator == ( const gen_iterator< T > & i1, const gen_iterator< T > & i2 );

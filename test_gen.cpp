@@ -3,21 +3,20 @@
 using namespace std;
 
 struct gen1: public pseudo_generator<int, gen1> {
-   int operator()();
+   void operator()( int& v );
    int x;
 };
 
-int gen1::operator()()
+void gen1::operator()( int & v )
 {
    BEGIN_GEN2( s1,s2 );
    for (x = 0; x<10; ++x){
-      YIELD( x, s1 );
+       YIELD( v, x, s1 );
    }
    for( x = 1000; x< 1000+10; x+=2){
-      YIELD( x,s2 );
+       YIELD( v, x, s2 );
    }
    END_GENERATOR;
-   return -1;//dummy
 };
 
 int main(int argc, char *argv[])
