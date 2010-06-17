@@ -31,11 +31,11 @@ struct pseudo_generator
     iterator end()const{ return iterator(); };
 };
 
-//Get the value of the generator and put it to the variable.
+//Get the value of the generator and put it to the variable. Same generatro is returned
 template< class T, class TC >
 TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
     TC & generator = static_cast<TC &>(g);
-    generator( v ); // operator() is defined for the descender, not for base
+    generator( v );
     return generator; // return the same generator to be able to chain calls
 };
 
@@ -44,12 +44,11 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 #define _BEGIN_GENERATOR_STATES  typedef enum{ _initial_state_=0, _end_state_=1,
 #define _END_GENERATOR_STATES    } _generator_state_type;
 
-/* Implementation macros
- */
+/* Implementation macros */
 
 // Begins state restoration section. MUST be present at the beginning of the generator body, only once.
 // THis macro may be followed by semicolon
-#define _BEGIN_RESTORE_STATE					\
+#define _BEGIN_RESTORE_STATE \
     switch( static_cast< _generator_state_type >(_continue_) ){ 
 		
 // Restore particular code. State name must be one of the names, declared in the class.
@@ -58,28 +57,24 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
     case state_name: goto _label_##state_name;
 		
 //Closes BEGIN_RESTORE_STATE. 
-#define _END_RESTORE_STATE                                               \
+#define _END_RESTORE_STATE                                              \
     case _initial_state_: goto _label__initial_state_;			\
     case _end_state_: throw std::logic_error("iterate after end");	\
     default: throw std::logic_error("Failed to restore state: state is unknown."); \
     }
 
-/*Returns value and stores current state. "state" must be one of the states, declared in the header.
- */
+/*Returns value and stores current state. "state" must be one of the states, declared in the header. */
 #define YIELD(variable, value, state)		\
     {_continue_ = state;			\
     (variable) = (value);                       \
     return;				        \
     _label_##state:;}
 
-/*Declare beginning of the generator body. MUST follow the END_RESTORE_STATE.
- */
-#define BEGIN_GENERATOR                         \
-    _label__initial_state_:;
+/*Declare beginning of the generator body. MUST follow the END_RESTORE_STATE. */
+#define _BEGIN_GENERATOR _label__initial_state_:;
 
 /*Closes the body*/
-#define END_GENERATOR                           \
-    _continue_ = _end_state_;			\
+#define END_GENERATOR _continue_ = _end_state_;			
    
 
 /****************************************************
@@ -166,9 +161,9 @@ typename unary_func::result_type map_reduce( generator& gen, const unary_func & 
 
 /**Copy values from the generator to the inut iterator*/
 template<class generator, class output_iter>
-output_iter gen_copy(generator & g, output_iter itr)
+output_iter gen_copy(pseudo_generator<typename generator::value_type, generator> &g , output_iter itr)
 {
-    for(typename generator::value_type x; g( x ); ++itr){
+    for(typename generator::value_type x; g >> x; ++itr){
 	(*itr) = x;
     }
     return itr;
