@@ -41,24 +41,24 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 
 /* Macros, for simplified declaration of the generator classes
  */
-#define BEGIN_GENERATOR_STATES  typedef enum{ _initial_state_=0, _end_state_=1,
-#define END_GENERATOR_STATES    } _generator_state_type;
+#define _BEGIN_GENERATOR_STATES  typedef enum{ _initial_state_=0, _end_state_=1,
+#define _END_GENERATOR_STATES    } _generator_state_type;
 
 /* Implementation macros
  */
 
 // Begins state restoration section. MUST be present at the beginning of the generator body, only once.
 // THis macro may be followed by semicolon
-#define BEGIN_RESTORE_STATE					\
+#define _BEGIN_RESTORE_STATE					\
     switch( static_cast< _generator_state_type >(_continue_) ){ 
 		
 // Restore particular code. State name must be one of the names, declared in the class.
 // This macro MUST follow the BEGIN_RESTORE_STATE, and MUST be repeated for anu state used.
-#define RESTORE_STATE(state_name)               \
+#define _RESTORE_STATE(state_name)               \
     case state_name: goto _label_##state_name;
 		
 //Closes BEGIN_RESTORE_STATE. 
-#define END_RESTORE_STATE                                               \
+#define _END_RESTORE_STATE                                               \
     case _initial_state_: goto _label__initial_state_;			\
     case _end_state_: throw std::logic_error("iterate after end");	\
     default: throw std::logic_error("Failed to restore state: state is unknown."); \
