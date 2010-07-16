@@ -39,7 +39,7 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 /**********************************************************************************
 /* Internal implementation macros, for simplified declaration of the generator classes
 **********************************************************************************/
-#define _BEGIN_GENERATOR_STATES  typedef enum{ _impossible_state_ = -1, _initial_state_ = 0, _end_state_ = 1,
+#define _BEGIN_GENERATOR_STATES  typedef enum{ _end_generator_state_ = -1, _initial_state_ = 0, _end_state_ = 1,
 #define _END_GENERATOR_STATES    } _generator_state_type;
 
 /* Implementation macros */
@@ -58,7 +58,7 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 #define _END_RESTORE_STATE                                              \
     case _initial_state_: goto _label__initial_state_;			\
     case _end_state_: throw std::logic_error("iterate after end");	\
-    case _impossible_state_: goto _label__impossible_state_;            \
+    case _end_generator_state_: goto _label__end_generator_state_;            \
     default: throw std::logic_error("Failed to restore state: state is unknown."); \
     }
 
@@ -78,7 +78,7 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 /*Closes the body*/
 //label is added here with the only purpose: to prevent successful complation in the situations,
 //when programmer forgot to put END_GENERATOR. It is essential for the successful working of the code.
-#define END_GENERATOR _label__impossible_state_: _continue_ = _end_state_; 
+#define END_GENERATOR _label__end_generator_state_: _continue_ = _end_state_; 
    
 
 
