@@ -51,24 +51,26 @@ TC& operator >> ( pseudo_generator<T, TC> &g, T &v ){
 		
 // Restore particular code. State name must be one of the names, declared in the class.
 // This macro MUST follow the BEGIN_RESTORE_STATE, and MUST be repeated for anu state used.
-#define _RESTORE_STATE(state_name)               \
+#define _RESTORE_STATE(state_name) \
     case state_name: goto _label_##state_name;
 		
 //Closes BEGIN_RESTORE_STATE. 
 #define _END_RESTORE_STATE                                              \
     case _initial_state_: goto _label__initial_state_;			\
     case _end_state_: throw std::logic_error("iterate after end");	\
-    case _impossible_state_: goto _label__impossible_state_;            \ 
+    case _impossible_state_: goto _label__impossible_state_;            \
     default: throw std::logic_error("Failed to restore state: state is unknown."); \
     }
 
 
 /*Returns value and stores current state. "state" must be one of the states, declared in the header. */
 #define YIELD(variable, value, state)		\
-    {_continue_ = state;			\
-    (variable) = (value);                       \
-    return;				        \
-    _label_##state:;}
+    { /*YIELD code*/                            \
+        _continue_ = state;			\
+        (variable) = (value);                   \
+        return;				        \
+        _label_##state:; /*will continue from here*/ \
+    }
 
 /*Declare beginning of the generator body. MUST follow the END_RESTORE_STATE. */
 #define _BEGIN_GENERATOR _label__initial_state_:;

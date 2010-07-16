@@ -9,7 +9,7 @@ struct gen1: public pseudo_generator<int, gen1> {
 
 void gen1::operator()( int & v )
 {
-   BEGIN_GEN2( s1,s2 );
+   GENERATOR2( s1,s2 );
    for (x = 0; x<10; ++x){
        YIELD( v, x, s1 );
    }
@@ -22,10 +22,8 @@ void gen1::operator()( int & v )
 int main(int argc, char *argv[])
 {
    gen1 g;
-   gen1::iterator i=g.begin(), e=g.end();
-   
-   for (; i!=e; ++i ){
-      cout<< *i <<endl;
+   for ( int i; g >> i; ){
+      cout << i << endl;
    }
    return 0;
 }
