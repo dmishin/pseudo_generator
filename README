@@ -1,0 +1,57 @@
+Generators (continuations) for C++
+
+Some languages, partcaularly, Python, support a very useful feature called "generators".
+It is a special case of the thing, known as "continuations".
+
+Here is a sample Python code for those, who by some reason do now know about them:
+
+[pyton]
+
+def primes():
+    yield 2
+    x = 3
+    while True:
+        for d in range( 
+    
+
+[/python]
+
+Is there any way to implement this in C++?
+Well, not really. 
+Support for continuations require that execution state can be saved and restored arbitratily.
+C++ model of execution does not allows this.
+
+BOOST offers generators library, based on a trick with threads: generator code is effectively runned in the separate thread,
+which eliminates the nececerity for saving execution state.
+
+This offers excellent "real" genrators, just like in Python, but some may think about such approach as about overkill.
+
+What I want is a simple, standart-compliant, low-overhead library, that can facilitate writing code in generator style.
+
+ANd, here it is.
+
+That's how you can implement the same genreator with this library:
+
+[C++]
+
+struct my_generator: public pseudo_generator<int>
+{
+    int,;
+    int operator()();
+};
+
+int my_generator::operator()()
+{
+    BEGIN_GENERATOR2( s1, s2 );
+    for 	
+    END_GENERATOR;
+    return -1; //dummy return;
+};
+
+[/C++]
+
+SOmewhat more dirty, than Python, but significantly more clear than onriginal C++.
+
+
+{ How it works }
+

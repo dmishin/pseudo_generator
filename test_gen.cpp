@@ -16,7 +16,7 @@ void gen1::operator()( int & v )
    for( x = 1000; x< 1000+10; x+=2){
        YIELD( v, x, s2 );
    }
-   //   END_GENERATOR;
+   END_GENERATOR;
 };
 
 int main(int argc, char *argv[])

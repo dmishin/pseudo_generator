@@ -1,12 +1,12 @@
 template = """
-#define BEGIN_GEN%s( %s ) \\
-   BEGIN_GENERATOR_STATES \\
+#define GENERATOR%s( %s ) \\
+   _BEGIN_GENERATOR_STATES \\
       %s \\
-   END_GENERATOR_STATES; \\
-   BEGIN_RESTORE_STATE \\
+   _END_GENERATOR_STATES; \\
+   _BEGIN_RESTORE_STATE \\
 %s \\
-   END_RESTORE_STATE; \\
-   BEGIN_GENERATOR
+   _END_RESTORE_STATE; \\
+   _BEGIN_GENERATOR
 """
 def splitby( lst, n ):
     grp = None
@@ -30,7 +30,7 @@ def gen( n ):
     states = ", ".join( map( statename, range(n) ) )
 
     def restore_state( i ):
-        return "RESTORE_STATE( STATE%s )"%i
+        return "_RESTORE_STATE( STATE%s )"%i
 
     rstates = " \\\n".join(
         map(lambda grp: "      "+" ".join( grp ), 
