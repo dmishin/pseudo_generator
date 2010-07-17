@@ -2,9 +2,6 @@ INSTALLATION
 
 This is a header-only library, which does not requires any special installation.
 
-(In fact, I am too lazy to make it).
-
-Just put the header files generator.hpp and _generator.hpp somwehere, where you C++ compiler can find them, and that's it.
-
 If you wish, you may regernerate _generator.hpp, using the provided python script. However, I don't believe that it is ever needed.
 
+Copy header files to the some directory, where C++ compiler can find them.
